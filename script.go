@@ -1,11 +1,11 @@
-package script
+package scripts
 
 import (
 	"bufio"
 	"container/ring"
 	"crypto/sha256"
 	"encoding/hex"
-	"encoding/json"
+	//"encoding/json"
 	"fmt"
 	"io"
 	"math"
@@ -20,7 +20,7 @@ import (
 	"sync"
 	"text/template"
 
-	"github.com/itchyny/gojq"
+	//"github.com/itchyny/gojq"
 	"mvdan.cc/sh/v3/shell"
 )
 
@@ -620,7 +620,7 @@ func (p *Pipe) Join() *Pipe {
 // The exact dialect of JQ supported is that provided by
 // [github.com/itchyny/gojq], whose documentation explains the differences
 // between it and standard JQ.
-func (p *Pipe) JQ(query string) *Pipe {
+/*func (p *Pipe) JQ(query string) *Pipe {
 	return p.Filter(func(r io.Reader, w io.Writer) error {
 		q, err := gojq.Parse(query)
 		if err != nil {
@@ -648,6 +648,7 @@ func (p *Pipe) JQ(query string) *Pipe {
 		}
 	})
 }
+*/
 
 // Last produces only the last n lines of the pipe's contents, or all the lines
 // if there are less than n. If n is zero or negative, there is no output at

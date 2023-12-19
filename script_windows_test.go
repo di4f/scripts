@@ -1,9 +1,9 @@
-package script_test
+package scripts_test
 
 import (
 	"testing"
 
-	"github.com/bitfield/script"
+	"github.com/di4f/scripts"
 )
 
 func TestDirnameReturnsExpectedResultsOnPlatformsWithBackslashPathSeparator(t *testing.T) {
@@ -20,7 +20,7 @@ func TestDirnameReturnsExpectedResultsOnPlatformsWithBackslashPathSeparator(t *t
 		{`C:\Program Files\PHP\a`, "C:\\Program Files\\PHP\n"},
 	}
 	for _, tc := range testCases {
-		got, err := script.Echo(tc.path).Dirname().String()
+		got, err := scripts.Echo(tc.path).Dirname().String()
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -31,7 +31,7 @@ func TestDirnameReturnsExpectedResultsOnPlatformsWithBackslashPathSeparator(t *t
 }
 
 func ExampleFindFiles() {
-	script.FindFiles("testdata/multiple_files_with_subdirectory").Stdout()
+	scripts.FindFiles("testdata/multiple_files_with_subdirectory").Stdout()
 	// Output:
 	// testdata\multiple_files_with_subdirectory\1.txt
 	// testdata\multiple_files_with_subdirectory\2.txt
@@ -42,7 +42,7 @@ func ExampleFindFiles() {
 }
 
 func ExampleListFiles() {
-	script.ListFiles("testdata/multiple_files_with_subdirectory").Stdout()
+	scripts.ListFiles("testdata/multiple_files_with_subdirectory").Stdout()
 	// Output:
 	// testdata\multiple_files_with_subdirectory\1.txt
 	// testdata\multiple_files_with_subdirectory\2.txt
@@ -60,7 +60,7 @@ func ExamplePipe_Basename() {
 		"./src/filters",
 		"C:\\Program Files",
 	}
-	script.Slice(input).Basename().Stdout()
+	scripts.Slice(input).Basename().Stdout()
 	// Output:
 	// .
 	// \
@@ -81,7 +81,7 @@ func ExamplePipe_Dirname() {
 		"./src/filters",
 		"C:/Program Files",
 	}
-	script.Slice(input).Dirname().Stdout()
+	scripts.Slice(input).Dirname().Stdout()
 	// Output:
 	// .
 	// \

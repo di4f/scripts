@@ -1,17 +1,17 @@
 //go:build !windows
 
-package script_test
+package scripts_test
 
 import (
 	"testing"
 
-	"github.com/bitfield/script"
+	"github.com/di4f/scriptss"
 	"github.com/google/go-cmp/cmp"
 )
 
 func TestExecForEach_HandlesLongLines(t *testing.T) {
 	t.Parallel()
-	got, err := script.Echo(longLine).ExecForEach(`echo "{{.}}"`).String()
+	got, err := scripts.Echo(longLine).ExecForEach(`echo "{{.}}"`).String()
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -22,7 +22,7 @@ func TestExecForEach_HandlesLongLines(t *testing.T) {
 
 func TestExecRunsShWithEchoHelloAndGetsOutputHello(t *testing.T) {
 	t.Parallel()
-	p := script.Exec("sh -c 'echo hello'")
+	p := scripts.Exec("sh -c 'echo hello'")
 	if p.Error() != nil {
 		t.Fatal(p.Error())
 	}
@@ -38,7 +38,7 @@ func TestExecRunsShWithEchoHelloAndGetsOutputHello(t *testing.T) {
 
 func TestExecRunsShWithinShWithEchoInceptionAndGetsOutputInception(t *testing.T) {
 	t.Parallel()
-	p := script.Exec("sh -c 'sh -c \"echo inception\"'")
+	p := scripts.Exec("sh -c 'sh -c \"echo inception\"'")
 	if p.Error() != nil {
 		t.Fatal(p.Error())
 	}
@@ -54,7 +54,7 @@ func TestExecRunsShWithinShWithEchoInceptionAndGetsOutputInception(t *testing.T)
 
 func TestExecErrorsRunningShellCommandWithUnterminatedStringArgument(t *testing.T) {
 	t.Parallel()
-	p := script.Exec("sh -c 'echo oh no")
+	p := scripts.Exec("sh -c 'echo oh no")
 	p.Wait()
 	if p.Error() == nil {
 		t.Error("want error running 'sh' command line containing unterminated string")
@@ -63,7 +63,7 @@ func TestExecErrorsRunningShellCommandWithUnterminatedStringArgument(t *testing.
 
 func TestExecForEach_RunsEchoWithABCAndGetsOutputABC(t *testing.T) {
 	t.Parallel()
-	p := script.Echo("a\nb\nc\n").ExecForEach("echo {{.}}")
+	p := scripts.Echo("a\nb\nc\n").ExecForEach("echo {{.}}")
 	if p.Error() != nil {
 		t.Fatal(p.Error())
 	}
@@ -79,7 +79,7 @@ func TestExecForEach_RunsEchoWithABCAndGetsOutputABC(t *testing.T) {
 
 func TestExecForEach_CorrectlyEvaluatesTemplateContainingIfStatement(t *testing.T) {
 	t.Parallel()
-	p := script.Echo("a").ExecForEach("echo {{if .}}it worked!{{end}}")
+	p := scripts.Echo("a").ExecForEach("echo {{if .}}it worked!{{end}}")
 	if p.Error() != nil {
 		t.Fatal(p.Error())
 	}
@@ -95,7 +95,7 @@ func TestExecForEach_CorrectlyEvaluatesTemplateContainingIfStatement(t *testing.
 
 func TestExecPipesDataToExternalCommandAndGetsExpectedOutput(t *testing.T) {
 	t.Parallel()
-	p := script.File("testdata/hello.txt").Exec("cat")
+	p := scripts.File("testdata/hello.txt").Exec("cat")
 	want := "hello world"
 	got, err := p.String()
 	if err != nil {
@@ -107,13 +107,13 @@ func TestExecPipesDataToExternalCommandAndGetsExpectedOutput(t *testing.T) {
 }
 
 func ExampleExec_ok() {
-	script.Exec("echo Hello, world!").Stdout()
+	scripts.Exec("echo Hello, world!").Stdout()
 	// Output:
 	// Hello, world!
 }
 
 func ExampleFindFiles() {
-	script.FindFiles("testdata/multiple_files_with_subdirectory").Stdout()
+	scripts.FindFiles("testdata/multiple_files_with_subdirectory").Stdout()
 	// Output:
 	// testdata/multiple_files_with_subdirectory/1.txt
 	// testdata/multiple_files_with_subdirectory/2.txt
@@ -124,19 +124,19 @@ func ExampleFindFiles() {
 }
 
 func ExampleIfExists_exec() {
-	script.IfExists("./testdata/hello.txt").Exec("echo hello").Stdout()
+	scripts.IfExists("./testdata/hello.txt").Exec("echo hello").Stdout()
 	// Output:
 	// hello
 }
 
 func ExampleIfExists_noExec() {
-	script.IfExists("doesntexist").Exec("echo hello").Stdout()
+	scripts.IfExists("doesntexist").Exec("echo hello").Stdout()
 	// Output:
 	//
 }
 
 func ExampleListFiles() {
-	script.ListFiles("testdata/multiple_files_with_subdirectory").Stdout()
+	scripts.ListFiles("testdata/multiple_files_with_subdirectory").Stdout()
 	// Output:
 	// testdata/multiple_files_with_subdirectory/1.txt
 	// testdata/multiple_files_with_subdirectory/2.txt
@@ -154,7 +154,7 @@ func ExamplePipe_Basename() {
 		"./src/filters",
 		"C:/Program Files",
 	}
-	script.Slice(input).Basename().Stdout()
+	scripts.Slice(input).Basename().Stdout()
 	// Output:
 	// .
 	// /
@@ -175,7 +175,7 @@ func ExamplePipe_Dirname() {
 		"./src/filters",
 		"C:/Program Files",
 	}
-	script.Slice(input).Dirname().Stdout()
+	scripts.Slice(input).Dirname().Stdout()
 	// Output:
 	// .
 	// /
@@ -187,13 +187,13 @@ func ExamplePipe_Dirname() {
 }
 
 func ExamplePipe_Exec() {
-	script.Echo("Hello, world!").Exec("tr a-z A-Z").Stdout()
+	scripts.Echo("Hello, world!").Exec("tr a-z A-Z").Stdout()
 	// Output:
 	// HELLO, WORLD!
 }
 
 func ExamplePipe_ExecForEach() {
-	script.Echo("a\nb\nc\n").ExecForEach("echo {{.}}").Stdout()
+	scripts.Echo("a\nb\nc\n").ExecForEach("echo {{.}}").Stdout()
 	// Output:
 	// a
 	// b
